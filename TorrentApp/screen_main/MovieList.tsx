@@ -7,6 +7,7 @@ import BigCatalogList from '../components_movie/BigCatalogList'
 
 import { StackScreenProps } from '@react-navigation/stack'
 import { MovieNavScreenList } from '../types'
+import SmallCatalogList from '../components_movie/SmallCatalogList'
 type MovieListProps= StackScreenProps<MovieNavScreenList,'MovieList'>
 
 export default function MovieList(props:MovieListProps):JSX.Element{
@@ -53,7 +54,7 @@ export default function MovieList(props:MovieListProps):JSX.Element{
     const recentUrl="https://yts.lt/api/v2/list_movies.json?sort_by=date_added&order_by=desc&limit=10";
     
     // 평점순 영화 정보 불러오는 url 
-    const ratingtUrl="https://yts.lt/api/v2/list_movies.json?sort_by=rating&order_by=desc&limit=10";
+    const ratingUrl="https://yts.lt/api/v2/list_movies.json?sort_by=rating&order_by=desc&limit=10";
     
     // 다운로드순 영화 정보 불러오는 url 
     const downloadUrl="https://yts.lt/api/v2/list_movies.json?sort_by=download_count&order_by=desc&limit=10";
@@ -64,9 +65,27 @@ export default function MovieList(props:MovieListProps):JSX.Element{
         <ScrollView style={style.root}>
             {/* 큰 이미지로 가장 높은 선호도를 가진 영화들을 가로 스크롤(페이징)로 보여주기 */}
             {/* 이 작업을 별도의 컴포넌트를 만들어서 제작하면 코드가 분리되어 유지보수가 용이함 */}
-            <BigCatalogList url={bigUrl}></BigCatalogList>
+            <BigCatalogList 
+                url={bigUrl}
+                onPress={(id)=>props.navigation.navigate('MovieDetail',{'id':id})}></BigCatalogList>
             
+            {/* 최신등록순, 평점순, 다운로드순 영화목록을 보여주는 작은 사이즈의 가로 스크롤 리스트 */}
+            {/* 3종류의 영화목록이 모두 같은 디자인을 가졌기에 별도의 컴포넌트를 만들어서 재사용 */}
+            <SmallCatalogList
+                title='최신등록순'
+                url={recentUrl}
+                onPress={(id)=>props.navigation.navigate('MovieDetail',{'id':id})}></SmallCatalogList>
 
+            <SmallCatalogList
+                title='평점순'
+                url={ratingUrl}
+                onPress={(id)=>props.navigation.navigate('MovieDetail',{'id':id})}></SmallCatalogList>
+
+            <SmallCatalogList
+                title='다운로드순'
+                url={downloadUrl}
+                onPress={(id)=>props.navigation.navigate('MovieDetail',{id})}></SmallCatalogList>        
+            
 
         </ScrollView>
     )
